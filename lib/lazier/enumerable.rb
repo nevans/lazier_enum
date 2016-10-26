@@ -86,9 +86,12 @@ module Lazier
     def_delegators :lazy, *PREDICATE_METHODS
 
     # TODO: proxy all scalar queries (lazily evaluated)
-    TODO_METHODS = ::Enumerable.instance_methods \
-      - ENUMERATION_METHODS \
-      - KICKER_METHODS - PREDICATE_METHODS
+    TODO_METHODS = ::Enumerable.instance_methods - [
+      :lazy,
+      *ENUMERATION_METHODS,
+      *KICKER_METHODS,
+      *PREDICATE_METHODS,
+    ].freeze
 
     # just to keep the spec happy for now (cheating!!!)
     TODO_METHODS.each do |m|
