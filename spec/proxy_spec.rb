@@ -2,7 +2,7 @@ require "spec_helper"
 
 module Lazier::Proxy
 
-  describe Indexed do
+  RSpec.describe Indexed do
 
     # using local variables to allow meta-programming
     nested_h = { f: 1, g: ["foo", "bar"] }
