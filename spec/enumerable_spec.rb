@@ -21,23 +21,26 @@ module Lazier
       let(:lazy_list) { LazyListTest.new(1.upto(100)) }
 
       block_methods = Enumerable::ENUMERATION_METHODS - [
-        :drop, :grep, :take, :zip
+        :drop, :grep, :grep_v, :take, :zip
       ]
 
       shared_examples "generic enumeration method" do
         it "returns a stdlib lazy enumerator" do
           expect(subject).to be_an(::Enumerator::Lazy)
         end
-        it "can be chained with other lazy methods" do
-          block_methods.each do |m2|
+
+        it "returns the same from #force and #to_a" do
+          expect(subject.force).to eq(subject.to_a)
+        end
+
+        block_methods.each do |m2|
+          it "can be chained with ##{m2}" do
             chained = subject.send(m2) {|i| i + 4 }
               .drop(2).grep(Integer).take(5)
             expect(chained).to be_an(::Enumerator::Lazy)
           end
         end
-        it "returns the same from #force and #to_a" do
-          expect(subject.force).to eq(subject.to_a)
-        end
+
       end
 
       block_methods.each do |m|

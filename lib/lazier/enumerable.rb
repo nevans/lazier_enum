@@ -58,6 +58,7 @@ module Lazier
       find_all
       flat_map
       grep
+      grep_v
       map
       reject
       select
@@ -73,6 +74,7 @@ module Lazier
     # Immediately evaluated "kicker" methods
     KICKER_METHODS = %i[
       first
+      count
       to_a
       to_h
       to_set
@@ -86,15 +88,38 @@ module Lazier
     def_delegators :lazy, *PREDICATE_METHODS
 
     # TODO: proxy all scalar queries (lazily evaluated)
-    TODO_METHODS = ::Enumerable.instance_methods - [
-      :lazy,
-      *ENUMERATION_METHODS,
-      *KICKER_METHODS,
-      *PREDICATE_METHODS,
+    PROXY_METHODS = %i[
+      chunk_while
+      cycle
+      detect
+      find
+      find_index
+      group_by
+      inject
+      max
+      max_by
+      min
+      min_by
+      minmax
+      minmax_by
+      partition
+      reduce
+      sort
+      sort_by
     ].freeze
 
-    # just to keep the spec happy for now (cheating!!!)
-    TODO_METHODS.each do |m|
+    ALTERNATE_ENUM_METHODS = %i[
+      each_cons
+      each_entry
+      each_slice
+      each_with_index
+      each_with_object
+      entries
+      reverse_each
+    ].freeze
+
+    # TODO: just to keep the spec happy for now (cheating!!!)
+    (PROXY_METHODS + ALTERNATE_ENUM_METHODS).each do |m|
       define_method m do raise NotImplementedError, "work in progress" end
     end
 
